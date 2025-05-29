@@ -119,7 +119,7 @@ When finished:
 ```docker rmi helloworldapp```
 
 #### Switch back to local machine's Docker environment
-```eval $(minikube docker-env -u)``` for Bash   
+```eval $(minikube docker-env -u)``` for Bash  
 ```& minikube docker-env -u | Invoke-Expression``` for PowerShell
 
 #### Remove docker image from local machine
