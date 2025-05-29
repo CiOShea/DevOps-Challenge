@@ -1,0 +1,65 @@
+name: .NET CI Pipeline
+
+# Pipeline triggers when there is a push to main branch or PR.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    # Job is run on latest Ubuntu-based runner provided by GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      # step 1 Checkout code from repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # step 2: Set up NET SDK on the runner so dotnet CLI can be used
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # Step 3: Restore NuGet packages listed in the .csproj file
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Step 4: Dotnet format to enforce formatting rules
+      # "--verify-no-changes" ensures the build fails if code is not properly formatted
+      - name: Run code formatter
+        run: dotnet format --verify-no-changes
+
+      # Step 5: Build the project using release config (as opposed to debug)
+      # --no-restore, as restore was done in step 3
+      # -warnaserror means build fails if there are compiler warnings
+      - name: Build project
+        run: dotnet build HelloWorldApp.csproj -c Release --no-restore -warnaserror
+
+      # In a production application I would probably use dotnet test step here
+      # This would be for unit testing
+
+      # Step 6: Publish the app to the 'out/' directory again using release config
+      - name: Publish app
+        run: dotnet publish HelloWorldApp.csproj -c Release --no-build --no-restore -o out
+
+      # Step 7: Build the Docker image from the Dockerfile in the repo
+      # The resulting image will be tagged as "helloworldapp"
+      - name: Build Docker image
+        run: docker build -t helloworldapp .
+
+      # Step 8: Save the Docker image to a local .tar file instead of pushing to reg (as per instructions)
+      # This simulates pushing to a registry (not required by challenge)
+      - name: Save Docker image as tarball
+        run: docker save helloworldapp -o hello-world.tar
+
+      # Step 9: Upload the .tar archive as an artifact so it can be downloaded after the run
+      # This is important because the GitHub Actions runner is temporary and deletes files after finishing
+      - name: Upload Docker image tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: hello-world.tar
+
