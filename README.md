@@ -26,7 +26,7 @@ This project uses **GitHub Actions** to:
 5. Upload the `.tar` as an artifact
 
 You can find the full pipeline at:  
-`.github/workflows/dotnet.yml`
+`.github/workflows/ci.yml`
 
 
 ### How to Run the CI/CD Pipeline
