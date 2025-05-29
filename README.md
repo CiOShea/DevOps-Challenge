@@ -93,7 +93,7 @@ I used ```minukube docker-env``` to see specific instructions for my machine (Ba
 ```minikube service helloworld-service```
 
 Output should look as follows:
-![Service output](screenshots/minicube_service.png)
+![Service output](screenshots/minikube_service.png)
 
 (This should open the web browser with the app running, and/or print a url to the cli eg. http://192.168.49.2:30007
 
@@ -119,7 +119,7 @@ When finished:
 ```docker rmi helloworldapp```
 
 #### Switch back to local machine's Docker environment
-```eval $(minikube docker-env -u)``` for Bash
+```eval $(minikube docker-env -u)``` for Bash   
 ```& minikube docker-env -u | Invoke-Expression``` for PowerShell
 
 #### Remove docker image from local machine
@@ -155,6 +155,15 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 ```yaml
 imagePullPolicy: Never
+```
+
+### dotnet format Failing in CI/CD
+#### Problem
+- The `dotnet format` step failed in GitHub Actions because it couldn't determine which project or solution to run on.
+#### Solution
+- I explicitly passed the .csproj file path:
+```yaml
+dotnet format HelloWorldApp.csproj --verify-no-changes
 ```
 
 ### Build Warning: --output Not Supported with .sln
