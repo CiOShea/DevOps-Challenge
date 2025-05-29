@@ -112,7 +112,7 @@ When finished:
 
 #### Delete Deployment and Servive
 
-```kubectl delete deployment -f helloworldapp.yaml ``` to delete deployment  
+```kubectl delete deployment helloworld-deployment ``` to delete deployment  
 ```kubectl delete service helloworld-service``` to delete service
 
 #### Remove Docker image from Minikube
