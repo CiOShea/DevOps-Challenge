@@ -30,7 +30,7 @@ jobs:
       # Step 4: Dotnet format to enforce formatting rules
       # "--verify-no-changes" ensures the build fails if code is not properly formatted
       - name: Run code formatter
-        run: dotnet format --verify-no-changes
+        run: dotnet format HelloWorldApp.csproj --verify-no-changes
 
       # Step 5: Build the project using release config (as opposed to debug)
       # --no-restore, as restore was done in step 3
